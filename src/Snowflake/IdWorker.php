@@ -7,10 +7,10 @@ use wantp\Snowflake\Server\FileCountServer;
 use wantp\Snowflake\Server\RedisCountServer;
 
 /**
- * Class Client snowflake算法生成unique id
+ * Class IdWorker snowflake算法生成unique id
  * @package Snowflake
  */
-class Client
+class IdWorker
 {
     const EPOCH_OFFSET = 1293811200000;
     const SIGN_BITS = 1;
@@ -23,9 +23,9 @@ class Client
     const REDIS_COUNT_SERVICE = 2;
 
     /**
-     * @var Client
+     * @var IdWorker
      */
-    private static $client;
+    private static $idWorker;
     /**
      * @var mixed
      */
@@ -94,21 +94,21 @@ class Client
      * @param int $dataCenterId
      * @param int $machineId
      * @throws \Exception
-     * @return Client $snowflake;
+     * @return IdWorker $snowflake;
      */
     public static function getIns($dataCenterId = 0, $machineId = 0)
     {
-        if (!(self::$client instanceof self)) {
-            self::$client = new self($dataCenterId, $machineId);
+        if (!(self::$idWorker instanceof self)) {
+            self::$idWorker = new self($dataCenterId, $machineId);
         }
-        return self::$client;
+        return self::$idWorker;
     }
 
     /**
      * Notes:setFileCountServer
      * @author  zhangrongwang
      * @date 2018-12-26 10:40:58
-     * @return Client
+     * @return IdWorker
      */
     public function setFileCountServer()
     {
@@ -122,7 +122,7 @@ class Client
      * @date 2018-12-26 10:41:02
      * @param $config ['host'=>'','port'=>'','dbIndex'=>'','auth'=>'']
      * @throws \Exception
-     * @return Client
+     * @return IdWorker
      */
     public function setRedisCountServer($config)
     {
@@ -145,7 +145,7 @@ class Client
         }
         $countServiceKey = $this->dataCenterId . '-' . $this->machineId . '-' . $timestamp;
         $sequence = $this->countService->getSequenceId($countServiceKey);
-        if ($sequence >= $this->maxSequenceId) {
+        if ($sequence > $this->maxSequenceId) {
             $timestamp = $this->getUnixTimestamp();
             while ($timestamp <= $this->lastTimestamp) {
                 $timestamp = $this->getUnixTimestamp();
