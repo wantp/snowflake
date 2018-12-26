@@ -1,0 +1,24 @@
+{
+  "name": "wantp/snowflake",
+  "description": "A package for create unique id by snowflake",
+  "keywords": [
+    "uniqueId",
+    "snowflake"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "zhangrongwang",
+      "email": "zhangrongwang798@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "wantp\\Snowflake\\": "src/Snowflake/"
+    }
+  }
+}
