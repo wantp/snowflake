@@ -1,0 +1,2 @@
+# snowflake
+Twitter雪花算法snowflake的PHP实现，解决并发可能造成id重复的问题
