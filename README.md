@@ -25,32 +25,39 @@ composer require wantp/snowflake
 ```
 require_once 'vendor/autoload.php';
 
-$client = \wantp\Snowflake\Client::getIns();
-$id = $uuid->id();
-
+$IdWorker = \wantp\Snowflake\IdWorker::getIns();
+$id = $IdWorker->id();
 
 ```
 
 ###### 反向解析id
 
 ```
-$idInfo = $uuid->parse($id);
+$idInfo = $IdWorker->parse($id);
 ```
 
 ###### 分布式，设置机器id
 
 ```
-require_once 'vendor/autoload.php';
-
-$uuid = \Snowflake\Uuid::getInstance(10,2);
-$id = $uuid->generate();
+$dataCenterId = 2;
+$machineId = 5;
+$IdWorker = \wantp\Snowflake\IdWorker::getIns($dataCenterId,$machineId);
+$id = $IdWorker->id();
 ```
 
 ###### 使用redis来控制并发
+- 需要先安装配置好redis，设置redis时需要填写redis配置  
+- redis配置说明
+
+| key | 是否必填 | 说明 |  
+|:----:|:---:|:---:|  
+|host|是|redis主机|
+|port|是|redis端口|
+|dbIndex|否|redis db index|
+|auth|否|redis认证|
 
 ```
-require_once 'vendor/autoload.php';
-
-$uuid = \Snowflake\Uuid::getInstance(10,2,2,['host'=>'redis.host','port'=>'6379','auth'=>'your redis auth']);
-$id = $uuid->generate();
+$resdisConfig = ['host'=>'redis host','port'=>'redis port','dbIndex'=>'redis dbIndex',auth'=>'redis auth'];
+$IdWorker = \wantp\Snowflake\IdWorker::getIns()->setRedisConutServer($resdisConfig);
+$id = $IdWorker->id();
 ```
