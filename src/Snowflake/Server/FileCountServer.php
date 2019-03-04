@@ -15,13 +15,24 @@ class FileCountServer implements CountServerInterFace
     public function getSequenceId($key)
     {
         $sequenceId = 0;
+        $lastTimestamp = 0;
+        $lastSequenceId = 0;
+        $keyFields = explode('-', $key);
+        $timestamp = (int)end($keyFields);
+
         $lockFileName = __DIR__ . DIRECTORY_SEPARATOR . 'sequenceId.lock';
-        $fp = fopen($lockFileName, 'w+');
+
+        if (file_exists($lockFileName)) {
+            $fp = fopen($lockFileName, 'r');
+            $lastTimestamp = (int)fgets($fp);
+            $lastSequenceId = (int)fgets($fp);
+            fclose($fp);
+        }
+
+        $fp = fopen($lockFileName, 'w');
         $keyFields = explode('-', $key);
         $timestamp = end($keyFields);
         if (flock($fp, LOCK_EX)) {
-            $lastTimestamp = fgets($fp);
-            $lastSequenceId = fgets($fp);
             if ($timestamp == $lastTimestamp) {
                 $sequenceId = $lastSequenceId + 1;
             }
