@@ -19,11 +19,11 @@ class RedisCountServer implements CountServerInterFace
             throw new \Exception('invalid redis config');
         }
         $this->redis->connect($config['host'], $config['port']);
-        if (isset($config['dbIndex'])) {
-            $this->redis->select($config['dbIndex']);
-        }
         if (isset($config['auth'])) {
             $this->redis->auth($config['auth']);
+        }
+        if (isset($config['dbIndex'])) {
+            $this->redis->select($config['dbIndex']);
         }
         return $this;
     }
